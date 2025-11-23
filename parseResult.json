@@ -1,0 +1,73 @@
+{
+  "result": {
+    "trades": [],
+    "liquidities": [],
+    "tokens": [],
+    "tokenPrices": [],
+    "userTradingSummary": []
+  },
+  "state": true,
+  "fee": {
+    "amount": "5000",
+    "uiAmount": 0.000005,
+    "decimals": 9
+  },
+  "trades": [],
+  "liquidities": [],
+  "transfers": [
+    {
+      "type": "transfer",
+      "programId": "11111111111111111111111111111111",
+      "info": {
+        "destination": "Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY",
+        "mint": "So11111111111111111111111111111111111111112",
+        "source": "EZvyYN1Q98yPJXh8FCTx94ZYFeo6wtJ544hKdAF72QyU",
+        "tokenAmount": {
+          "amount": 1001,
+          "uiAmount": 0.000001001
+        },
+        "sourceBalance": {
+          "amount": "1780085614",
+          "uiAmount": 1.780085614,
+          "decimals": 9
+        },
+        "sourcePreBalance": {
+          "amount": "1780091615",
+          "uiAmount": 1.780091615,
+          "decimals": 9
+        },
+        "destinationBalance": {
+          "amount": "5378796",
+          "uiAmount": 0.005378796,
+          "decimals": 9
+        },
+        "destinationPreBalance": {
+          "amount": "5377795",
+          "uiAmount": 0.005377795,
+          "decimals": 9
+        }
+      },
+      "idx": "3",
+      "timestamp": 0,
+      "signature": "2gz2rs8BVs3SrYERaH2jLPRVwJuS1Z9V33obwrYm33sKgridTtxju42JofrdeqYE59kwdZ4DbE7xwiocvMPZm24F"
+    }
+  ],
+  "moreEvents": {},
+  "solBalanceChange": {
+    "pre": {
+      "amount": "1780091615",
+      "uiAmount": 1.780091615,
+      "decimals": 9
+    },
+    "post": {
+      "amount": "1780085614",
+      "uiAmount": 1.780085614,
+      "decimals": 9
+    },
+    "change": {
+      "amount": "-6001",
+      "uiAmount": -0.000006001,
+      "decimals": 9
+    }
+  }
+}

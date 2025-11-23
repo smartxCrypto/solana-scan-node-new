@@ -1,0 +1,1802 @@
+[
+  {
+    "metrics": {
+      "walletAddress": "4y9g3kxHpuhgZwW2qNdjFp7FiRsMkhYwWRNxRNJBxvMj",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "9Kce2uLN5s178QMbfgzecyThSY6q6KDenH9bhrNHsQyS",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "5YDa1zRR8kQrxVDZtyiwKTQdApWfd1RxLyvJ6PydFgq4",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "5xwkEYyfV1RBgGEJPDu3fbMDex5MCqSAJ3ivdEgzKc6X",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "6VMvnoVAsanEj8kTiBqtPw3WwfaLKDhMXvFwxnkJC1M9",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "811771ejPGjgovqmimbGCMmH6ngXmJ7C1E1pmn9Yia9U",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "8gzbgn3X3k3RWKwrBJxLfP64UP12RuncampsZxdvjB1g",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "937LbNjZVJ4V7PFYArREuJbNAek6JKAhHQ94DQTU4Cjs",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "5R1g6cGokCLdG4itiqpCKbybCfMR3MwiicpXEdrj5XBM",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "E23vSQGHahB4BxqMf1RsU2xKxNA32LwJQML8B2mjyac2",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "FnhrYv8zQk1ymbz3giuqdQEvtjVVJ3UMAM3RbvMXMyRp",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "GMSWqgaxjEUR2MZv9eDUAwxX5C2mXYqHbTbvMuxW7UrN",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "2UY7ST1JS8HSQS3MSuzB98tsk5fu8mDpmKoyu5Qv8Agz",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "7xLNH226aEJoXEHpdiu1iiChKPyvSSp63qKXgwtPedio",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "HPF1Y4v6ngTSYgbEHvjjFh3aLjaRnLr6b5phnCsXquAY",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "3AFwhQ6rse3HFQHAt1BdvCUuW3WrYW971LFqRWsZzice",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "44Swx1SQnLDhE8C3e7SfgaoPM3N4CXbmiyb8oMzNWGrb",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "9p71q7iJifEdYu6uvqSKGrHU7Y4dPZmyVhcjp5F51x5z",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "A5ojC6z9jB2xtjfdvo8PH2e29h9Tomk1F4tz4emEMv9L",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "27ehGBeAZ6vz5PwLSq9CZ4uYDqQiSX7iB45Pd84vHPPk",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 12.61195770744,
+      "wallet_balance": 12.61195770744,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 0.090085412196,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_win_rate",
+    "categoryScore": 76.03416487839999
+  },
+  {
+    "metrics": {
+      "walletAddress": "GcGCGQ46wLvAXvLSk7oGcHAJezjfpTC3ScfE5b3k7ZQP",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "6uG1dRrEFWXjNfLcBRaaJKAQHM7fQdMEG3VeGRX2dTPu",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "DDUYmESHkHCwTwpweauRGccHfK7q9yNkdDcM3TLAY7cD",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "e2aqbUfQuPputa9KTdUzYvxUtrwWL4zqfyBg8Ls2Q42",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "5yYmjNTDfAnezhjkymcnk4qdM6t2LnuBduBxpjj2ebhY",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "3q3c3JFPZ131bbAhosK5QxmwhwWuRnxy69qnANc766Aj",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "qokhJQg4PvX7zj6W84Ag1euzoxzarHK7gzuktPnHmQx",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "9VdfYQUjcwSTcAZoGfCjw4LSyvWBpmErrpridfgNcLdP",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "DrvepYeGmtTZZQQSCZMV38DVE2jBRJtXsqPKWGjM661H",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "Q9TnrhFueaJiazcBxvw9Vv4KEwCVUAM1C9vSXo37xpS",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 186.52878873986697,
+      "wallet_balance": 186.52878873986697,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 1.3323484909990497,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_win_rate",
+    "categoryScore": 80
+  },
+  {
+    "metrics": {
+      "walletAddress": "EoyFfbmCCpnkopFgcbvuGgugrfVUsLxuAEyLqCRot5ZV",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "6VdP64WAhVfpZ2Z3c4haTQTkAzz89kxtyxVsLnrCbAgu",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "Fd1veGc11hVfm4uAnLFTgzwuvkxdt5oqM5VMSaALognX",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 42.15624892008599,
+      "wallet_balance": 42.15624892008599,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 0.9898805067148999,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_win_rate",
+    "categoryScore": 80
+  },
+  {
+    "metrics": {
+      "walletAddress": "D39UjYBs5zdJKPfgnbPGCi9ZzBgQP1EVT8cq2ZgoWZuH",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 242.47613420868885,
+      "wallet_balance": 242.47613420868885,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 7,
+      "effective_win_token_pct": 1,
+      "profit": -0.016282834795079415,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "676yrrDabFFnLrZA9DtxTQ4yoLi3f3mn3gGJBcLfVBDc",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 342.43252310462583,
+      "wallet_balance": 342.43252310462583,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 1.8461010896044705,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_profit_rate",
+    "categoryScore": 84.55930906295293
+  },
+  {
+    "metrics": {
+      "walletAddress": "54qijvZwkAjPbNWp9DtXKhF5u4gxutqdWiXCLufvDkTL",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 42.320977716488805,
+      "wallet_balance": 42.320977716488805,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 0.30229269797492003,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_win_rate",
+    "categoryScore": 80
+  },
+  {
+    "metrics": {
+      "walletAddress": "6xaLB5R2NNaTZqRXfmb2ocKv3vvpnca7Qm1vdbhkuxRu",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "Ct2U1exUssJp3VzTuUseidDSWtM8nFTaRJR18ZshGi4",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 4.0886864312112,
+      "wallet_balance": 4.0886864312112,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 0.02920490308008,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "Hs1cKKhCYZbB8hL5CwQkhnE7GV7vZNEnnYksN2z8Zi8c",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "A7cq7uhv4stPmjby7NESvhGGGjYRYDgsMe8hzDVyBUjx",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "9dfWHFk1y6XZciJv1PiVjD1XtvehadtP41NU5jxq8ghB",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "6EWfYutWSVqwvVhMtd23ebAf3GKvQoTEUot5rnivV9Fk",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "J77czieGiFWhE2bc2X9as5yQ4QGNJAGwErDvDb7MhYdo",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "4Nqn39zE1wNQ5LahBDjVWwWgVqMmJ1JjBr8k5Hux5MFJ",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "2UFfwKACMkiaPrnhbpJWSkffehNpXK6cYdFLgWDZRYV5",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "CpVmpQrgU1AdeNH6pseS3gcfWduGmEtJYAxM3VN1f9XP",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "By2puWTn2qWEKccn8JPAaiQdC18Rf9LP8dPznkQfTPfc",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "8atZEiDT1yiCnWr3JjTezzM96kJRNVjoXP3bzXnQ3qAH",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "56CVutvCn7vjiDggSW9bqMmHxqphxxjMCEqFxxRzf8TR",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "2eVTEgV9kx6cuHCczbHbSSAqhRjm13WXVtBsUgLUi97V",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 7,
+      "effective_win_token_pct": 0,
+      "profit": -0.0699999999999994,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "4PhD7G74x2LFuyu39ioWE4NNi96oovbsDyqyhaqaV8cs",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "3CjpA5imEbB8Fd263gS5xmt7ao416NVUc6qis9PWBXtt",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "6e9gnkAR9S4SgLSYLmuBJUzF7UMxVaDDYo16kbAHFaxz",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "3ve4N3g7RRZsiDzA9uRhcQaXn626639huFo2uVSJMwKD",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "zmUZd7AbFDATmYtMrvcUTvajijAiPV1ZrHL3rx52eS5",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "gLs8m7rY17iJbDBC9EqjjMHpV8jMZUYWtd5NfQeFRWK",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 132.72653081400998,
+      "wallet_balance": 132.72653081400998,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 5,
+      "effective_win_token_pct": 1,
+      "profit": -0.0007525413285000004,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "CZKMq7AniBzoiRbKZvtqy6MkBmbGFePSW6aF3pYLbBac",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 83.01718054021,
+      "wallet_balance": 83.01718054021,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 5,
+      "effective_win_token_pct": 1,
+      "profit": -0.0015662689984999867,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "8R8E3B7jz6sTHcDKkwZ4Ls9NVKipgZg7txZNNCuqgy8i",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "5nMrscC2MmJRU2orCx4wiC1X6VJcJgHV9Xc3rvFExXHo",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "9QiVZKtVqvoNAJtk9VQjGCRr4koUS8YHMwEujQFJwq9R",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "H2xCptSUYWdYgMKuswywLKZ6EQtDQkFbVz8n12coXw6M",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0.68242731144,
+      "wallet_balance": 0.68242731144,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 0.004874480796,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "vecvXJxSc8dd3jVb1Gf9h2V4hvohp6E1aM2a915nPs8",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 74.8315665487768,
+      "wallet_balance": 74.8315665487768,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 2,
+      "effective_win_token_pct": 1,
+      "profit": -0.010548550365879983,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "3PJSu199txvqhmDUbHTSsNVNxSAmggxv3npPXH7jY2Nj",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "hVSM8NBbtzxCrig3zr2GkKsbxaguM44aUMDDKKPm9sw",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": -1,
+      "effective_win_token_pct": 0,
+      "profit": 1.449956185,
+      "weight_hold_time": 259200,
+      "weight_average_time": 259200
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "ARGDKXXX4kFMQnBPGNgGhbG7jTfQGWjd5KA82ybJo8nt",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 26.876097995380206,
+      "wallet_balance": 26.876097995380206,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 0.19197212853843004,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_win_rate",
+    "categoryScore": 80
+  },
+  {
+    "metrics": {
+      "walletAddress": "AE3m4pbWU2ydNWGidu4NrFKeUJr2Eh1U1TMjHnpsZ924",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "93NkHyzRSS2pf41Cybmi8c8Wsm92WYGLCmV5vM65yRBD",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "8WDUU8rPKi9vfkhTZM1GAPuVygASeqNJNtcdDYgWCXpZ",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "5b2GZhvEsq3DqqdH2TrH62uuvD2Zi8yLknPacSAqSLfX",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "3gYTbSbEDiEjDL7cxvUiZwo4oNfYmLcfUKd91mBr5PjE",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "BY2QnPqXdWiDq3rpZwgj9bB1NToWkquA3VmHhGMGvUfu",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "LosdoEsVAHhTeyWGpWGwfJZ88M6JRHFCqSRHXPed8yh",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "HnvST62DGo8pPKwAGiLpdZZpkzBYegvh8gBN5e4ebCPe",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "9oSVbzryzU1sZp6dmd4ZJAye3tWvZLzA5SS2zGSqsnRk",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "Go6rjfn8yNauPNQDwEXwXhQmPtAPBeh4VuivDkJ7yKZR",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "6AXcXnzkDiq3SwcvvyyZsdsMfRt4o529AwCPvJLQqn6Z",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "7YT81773CSdXwgBVu6SZoXS7W3kqWiUzCsRiEasvhkqp",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 696.8139984747116,
+      "wallet_balance": 696.8139984747116,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 4.9772428462479406,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_profit_rate",
+    "categoryScore": 100
+  },
+  {
+    "metrics": {
+      "walletAddress": "3PD7UkTsuX5cqFiLgt4HBMuuK87JqLPqE28Rv8b8THUz",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0.14561312599999998,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "GwjikQ5avc7NrQUWt5hb8LYWb5BQV2Szw5o4jAAUZfLT",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "6p4mNVhS2TsFhaiLMPM5YtJuXmX7RHeSDqgjLMbYH2rs",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "9Tdh1PHbXcdkygWPFStwNK24eHSdfMn1NAkLQjUPNc12",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "73KDAZLUr1zReyuiwqcmPyLSYq94KJck2259sQJcMV9e",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 94.8612920897152,
+      "wallet_balance": 94.8612920897152,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 8,
+      "effective_win_token_pct": 1,
+      "profit": -0.009043846216319928,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "Hc5NWXZLK4fkk5g5VcRppFthsCwi4Dtt7kNMK6g6qrqF",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "CFaw8CbD2K4L3RPywM6h1m8bRRs7kDn9WpSXvx9uD57e",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "GdXiXLGe8djGoatdvpJFpXsoUSmQVWYN7zvnfK2vunFS",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "8ycQw6tCRr7pmiEEt9V1jPERrK9j8TPXeG6YWw6mBNnJ",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 27.1594666196672,
+      "wallet_balance": 27.1594666196672,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 0.19399619014048,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_win_rate",
+    "categoryScore": 80
+  },
+  {
+    "metrics": {
+      "walletAddress": "8gCkHh8bYXNXRu8UkPsLFxu5qhQTqHY8nRGEdarVFFte",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "gcv51uGyQY3GAZtYKhT4asLxiHxBPVvG3THBkzZTxx3",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "FqmVGud793ePaRLqu3ag2frTSDCif2jbDidvxuW2Mk5s",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "D1orxCVnM1xchs5bwdLu63VtHk4qXAMD85QXsL7PTQ9m",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "7fd68k2oGetEbHa96Qezh71U4CmjPaHmMyfqHqvUrGuR",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "DSAwf6tukTsev6AiVHhLadcUYMSH83mNW68hiyMrGoPi",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 30.042816296906,
+      "wallet_balance": 30.042816296906,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 0.2145915449779,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_win_rate",
+    "categoryScore": 80
+  },
+  {
+    "metrics": {
+      "walletAddress": "A1RhoVdQSmZyTFCaMDHr89HWRAhnG9qofRzVinGGJ7gg",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 1,
+      "active_days_present": -1.5,
+      "token_buy_counts": -4,
+      "effective_win_token_pct": 0,
+      "profit": 3.135984037,
+      "weight_hold_time": 259200,
+      "weight_average_time": 259200
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "6W4syfDR4QjCfa24LQWCqAQLHmf54K1YHR9aRuLeuRMY",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 118.33000891557998,
+      "wallet_balance": 118.33000891557998,
+      "buy_token_count": 1,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 1,
+      "profit": 0.8452143493969999,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_win_rate",
+    "categoryScore": 80
+  },
+  {
+    "metrics": {
+      "walletAddress": "6NbcTJFwARrs7HzYiDuZZS5ukNyecgcCgu9N2pjkDec9",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "6RKUu5Syyue4YvFpF9n2wo2Me5ou82VRzQ4v4HmDs5FK",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 0,
+      "wallet_balance": 0,
+      "buy_token_count": 0,
+      "active_days_present": 0,
+      "token_buy_counts": 0,
+      "effective_win_token_pct": 0,
+      "profit": 0,
+      "weight_hold_time": 0,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "SbwwTyj8mZx14MM4ijzwMUev56b8AFjWwz3MrkYeDvm",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 1900.2500049612024,
+      "wallet_balance": 1900.2500049612024,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 7,
+      "effective_win_token_pct": 1,
+      "profit": -0.006785678848553189,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "whale_profit",
+    "categoryScore": 100
+  },
+  {
+    "metrics": {
+      "walletAddress": "GNz9Y3RDNf5PY8tjTDX6EXvzioo7aWreU4t3j9RWUXfY",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 990.0116298801544,
+      "wallet_balance": 990.0116298801544,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 6,
+      "effective_win_token_pct": 1,
+      "profit": 0.025743118001104293,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "normal",
+    "categoryScore": 0
+  },
+  {
+    "metrics": {
+      "walletAddress": "BLSFgjeytYqwv5gZomWwmFMehkMHtWfVo1HJt5KScb6M",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 60.687628766352,
+      "wallet_balance": 60.687628766352,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 3,
+      "effective_win_token_pct": 1,
+      "profit": 2.9249053266167997,
+      "weight_hold_time": 259200,
+      "weight_average_time": 259200
+    },
+    "category": "high_profit_rate",
+    "categoryScore": 100
+  },
+  {
+    "metrics": {
+      "walletAddress": "8bSKsJvMZJd3crkYu5DAtbZZmsKXgbKS8gQ22sqoLQJg",
+      "analysisStartTime": 1751100899,
+      "analysisEndTime": 1751273699,
+      "native_token_balance": 791.0488614680288,
+      "wallet_balance": 791.0488614680288,
+      "buy_token_count": 1,
+      "active_days_present": 1,
+      "token_buy_counts": 9,
+      "effective_win_token_pct": 1,
+      "profit": 0.22142964048591907,
+      "weight_hold_time": 259200,
+      "weight_average_time": 0
+    },
+    "category": "high_win_rate",
+    "categoryScore": 100
+  }
+]

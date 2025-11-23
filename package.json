@@ -1,0 +1,61 @@
+{
+  "name": "solana_collection_node",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup src/**/*.ts --out-dir dist --format cjs --target node18 --clean",
+    "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
+    "start:grpc-message-parse": "ts-node-dev src/scan/SolanaBlockScanner.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "snapshot": "ts-node src/cron/snapshot/start.ts"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/jest": "^29.5.5",
+    "@types/node": "^22.15.23",
+    "fs-extra": "^11.3.0",
+    "jest": "^29.7.0",
+    "module-alias": "^2.2.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.2.2"
+  },
+  "_moduleAliases": {
+    "@": "dist"
+  },
+  "dependencies": {
+    "@clickhouse/client": "^1.11.2",
+    "@coral-xyz/anchor": "^0.30.1",
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
+    "@metaplex-foundation/umi": "^1.2.0",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.2.0",
+    "@noble/hashes": "^1.8.0",
+    "@shyft-to/solana-transaction-parser": "^2.0.1",
+    "@solana/buffer-layout": "^4.0.1",
+    "@solana/buffer-layout-utils": "^0.2.0",
+    "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.2",
+    "@triton-one/yellowstone-grpc": "^4.0.2",
+    "@types/mysql": "^2.15.27",
+    "axios": "^1.9.0",
+    "bn.js": "^5.2.2",
+    "borsh": "^0.7.0",
+    "bs58": "^6.0.0",
+    "bull": "^4.16.5",
+    "decimal.js": "^10.5.0",
+    "dotenv": "^16.5.0",
+    "fastestsmallesttextencoderdecoder": "^1.0.22",
+    "helius-laserstream": "^0.0.7",
+    "mysql": "^2.12.0",
+    "mysql2": "^3.14.1",
+    "node-cron": "^4.1.1",
+    "redis": "^5.5.6",
+    "solana-parser": "~0.1.5",
+    "tsup": "^8.5.0"
+  }
+}
