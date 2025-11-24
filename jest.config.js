@@ -23,5 +23,6 @@ module.exports = {
     'text',
     'lcov',
     'html'
-  ]
+  ],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
 }; 

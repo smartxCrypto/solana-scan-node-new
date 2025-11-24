@@ -74,10 +74,10 @@ export class SolanaBlockDataHandler {
                         if (getLock > 0) {
                             try {
                                 await SolanaBlockDataHandler.handleBlockData(blockNumber);
-                            }finally {
+                            } finally {
                                 await redisClient.hdel(BlockDataSerializer.cache_key, String(blockNumber));
-                                const hasDelete=await redisClient.client.hExists(BlockDataSerializer.cache_key, String(blockNumber));
-                                if (hasDelete===0){
+                                const hasDelete = await redisClient.client.hExists(BlockDataSerializer.cache_key, String(blockNumber));
+                                if (hasDelete === 0) {
                                     await redisClient.del(lockKey);
                                 }
                             }
@@ -108,20 +108,41 @@ export class SolanaBlockDataHandler {
             await redisClient.hdel(BlockDataSerializer.cache_key, String(blockNumber));
             return;
         }
+
+        const swapTransactionArray = await this.handleBlockDataWithBlockData(blockData, blockNumber);
+        const insertStart = Date.now();
+        if (swapTransactionArray.length > 0) {
+            this.insertToTokenTable(swapTransactionArray);
+            this.insertToWalletTable(swapTransactionArray);
+        }
+        // if (lpArray.length > 0) {
+        //     this.batchUpsertLpInfo(lpArray, blockData.blockTime?.timestamp);
+        // }
+        console.log(
+            `insert cost:${Date.now() - insertStart} ms,blockNumber:${blockNumber}`);
+        console.log(`handleBlockData cost:${Date.now() - start} ms,blockNumber:${blockNumber}`);
+    }
+
+    public static async handleBlockDataWithBlockData(
+        blockData: any,
+        blockNumber: number,
+    ) {
         const parseResult = await exportDexparserInstance.parseBlockData(
             blockData,
             blockNumber,
         );
         const fileteTransactions = parseResult.filter((tx) =>
-            tx.result?.trades?.length > 0 && tx.trades.length > 0
+            tx.trades?.length > 0
         );
         const convertStart = Date.now();
         const swapTransactionArray = [];
         const solPrice = await TokenPriceService.getPrice("SOL", "USDT");
         const tokenPriceMap = {};
+
         for (let index = 0; index < fileteTransactions.length; index++) {
             const tx = fileteTransactions[index];
             for (let index = 0; index < tx.trades.length; index++) {
+
                 try {
                     const swapTransaction = await SolanaBlockDataHandler.convertData(
                         tx,
@@ -139,20 +160,11 @@ export class SolanaBlockDataHandler {
                 }
             }
         }
+
         console.log(
             `convertData cost:${Date.now() - convertStart} ms,blockNumber:${blockNumber},blockTime:${blockData.blockTime?.timestamp}`);
         this.convertToLpInfoUpdateList(fileteTransactions, Number(blockData.blockTime?.timestamp), tokenPriceMap);
-        const insertStart = Date.now();
-        if (swapTransactionArray.length > 0) {
-            this.insertToTokenTable(swapTransactionArray);
-            this.insertToWalletTable(swapTransactionArray);
-        }
-        // if (lpArray.length > 0) {
-        //     this.batchUpsertLpInfo(lpArray, blockData.blockTime?.timestamp);
-        // }
-        console.log(
-            `insert cost:${Date.now() - insertStart} ms,blockNumber:${blockNumber}`);
-        console.log(`handleBlockData cost:${Date.now() - start} ms,blockNumber:${blockNumber}`);
+        return swapTransactionArray;
     }
 
     static convertToLpInfoUpdateList(fileteTransactions: any[], blockTime: number, tokenPriceMap: any): LpInfoUpdate[] {
@@ -196,11 +208,13 @@ export class SolanaBlockDataHandler {
         blockTime: number,
         tokenPriceMap: any
     ): Promise<SwapTransaction | null> {
-        const tradeDetail = parseResult.result.trades[index];
+        if (parseResult.trades.length === 0) {
+            return null;
+        }
         let tradeType = parseResult.trades[index].type;
-        const txHash = tradeDetail.transaction_signature;
+        const txHash = parseResult.signature;
         const transactionTime = blockTime;
-        const walletAddress = tradeDetail.user_address;
+        const walletAddress = parseResult.trades[index].user;
         let tokenAmount;
         let tokenSymbol;
         let tokenAddress;
@@ -208,22 +222,22 @@ export class SolanaBlockDataHandler {
         let quoteAmount;
         let quoteAddress;
         let quotePrice;
-        let poolAddress = tradeDetail.pool_address;
+        let poolAddress = parseResult.trades[index].Pool?.[0] || "";
         if (tradeType === "BUY") {
-            tokenAmount = tradeDetail.token_out_amount;
-            tokenSymbol = tradeDetail.token_out_symbol;
-            tokenAddress = tradeDetail.token_out_mint;
-            quoteSymbol = tradeDetail.token_in_symbol;
-            quoteAmount = tradeDetail.token_in_amount;
-            quoteAddress = tradeDetail.token_in_mint;
+            tokenAmount = parseResult.trades[index].outputToken.amount;
+            tokenSymbol = "";
+            tokenAddress = parseResult.trades[index].outputToken.mint;
+            quoteSymbol = "";
+            quoteAmount = parseResult.trades[index].inputToken.amount;
+            quoteAddress = parseResult.trades[index].inputToken.mint;
             quotePrice = MathUtil.divide(quoteAmount, tokenAmount); //quoteAmount / tokenAmount;
         } else {
-            tokenAmount = tradeDetail.token_in_amount;
-            tokenSymbol = tradeDetail.token_in_symbol;
-            tokenAddress = tradeDetail.token_in_mint;
-            quoteSymbol = tradeDetail.token_out_symbol;
-            quoteAmount = tradeDetail.token_out_amount;
-            quoteAddress = tradeDetail.token_out_mint;
+            tokenAmount = parseResult.trades[index].inputToken.amount;
+            tokenSymbol = "";
+            tokenAddress = parseResult.trades[index].inputToken.mint;
+            quoteSymbol = "";
+            quoteAmount = parseResult.trades[index].outputToken.amount;
+            quoteAddress = parseResult.trades[index].outputToken.mint;
             quotePrice = MathUtil.divide(quoteAmount, tokenAmount); //quoteAmount / tokenAmount;
         }
         quotePrice = MathUtil.toFixed(quotePrice);
@@ -281,7 +295,7 @@ export class SolanaBlockDataHandler {
         }));
 
         await clickhouseClient.insert({
-            table: "solana_swap_transactions_wallet",
+            table: "≈",
             values,
             format: "JSONEachRow",
         });

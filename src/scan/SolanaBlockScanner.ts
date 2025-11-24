@@ -62,8 +62,8 @@ export class SolanaBlockScanner {
                 return;
             }
 
-            const fileName = `block_data_${Number(res.block?.slot)}.json`;
-            writeFileSync(fileName, JSON.stringify(blockData, null, 2));
+            // const fileName = `block_data_${Number(res.block?.slot)}.json`;
+            // writeFileSync(fileName, JSON.stringify(blockData, null, 2));
 
             const handleStart = Date.now();
             // await blockQueue.add({ blockData, slot: Number(res.block?.slot) });

@@ -6,7 +6,7 @@ import { exportDexparserInstance } from "../collection/dex-parser";
 
 describe('get block test', () => {
     test('should get block', async () => {
-        const block = await getBlockTransactions(375235472);
+        const block = await getBlockTransactions(382114936);
         const serializedBlock = JSON.stringify(block, null, 2);
         writeFileSync('./src/__tests__/__test_value__/get_block.json', serializedBlock);
     });
@@ -15,7 +15,7 @@ describe('get block test', () => {
 
         const blockDataObj = JSON.parse(blockData);
         const grpcData = BlockDataConverter.convertRpcToGrpc(blockDataObj);
-        const parseResult = await exportDexparserInstance.parseBlockData(grpcData, 375235472);
+        const parseResult = await exportDexparserInstance.parseBlockData(grpcData, 382114936);
         const serializedParseResult = JSON.stringify(parseResult, BlockDataSerializer.replacer, 2);
         writeFileSync('./src/__tests__/__test_result_value__/get_block_parse_result.json', serializedParseResult);
     });
