@@ -1,5 +1,5 @@
 import clickhouseClient from "../constant/config/clickhouse.js";
-import { commonQuery } from "../utils/mysqlHelper";
+import { TokenSnapshotRepository } from "../database/repositories";
 
 /**
  * 时间维度枚举
@@ -186,27 +186,18 @@ export class TokenAnalyticsService {
      */
     private static async getLatestTokenSnapshot(tokenAddress: string): Promise<TokenSnapshot | null> {
         try {
-            const sql = `
-                SELECT snap_shot_block_time, buy_amount, sell_amount, avg_price, total_supply, token_symbol
-                FROM token_ss 
-                WHERE token_address = ? 
-                ORDER BY snap_shot_block_time DESC 
-                LIMIT 1
-            `;
+            const snapshot = await TokenSnapshotRepository.findLatestByToken(tokenAddress);
 
-            const result = await commonQuery<any>(sql, [tokenAddress]);
-
-            if (result.length === 0) {
+            if (!snapshot) {
                 return null;
             }
 
-            const row = result[0];
             return {
-                snap_shot_block_time: row.snap_shot_block_time,
-                buy_amount: parseFloat(row.buy_amount) || 0,
-                sell_amount: parseFloat(row.sell_amount) || 0,
-                avg_price: parseFloat(row.avg_price) || 0,
-                total_supply: parseFloat(row.total_supply) || 0
+                snap_shot_block_time: Number(snapshot.snapShotBlockTime),
+                buy_amount: snapshot.buyAmount,
+                sell_amount: snapshot.sellAmount,
+                avg_price: snapshot.avgPrice,
+                total_supply: snapshot.totalSupply
             };
 
         } catch (error) {

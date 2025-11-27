@@ -13,8 +13,10 @@ import { BlockDataSerializer } from "@/scan/BlockDataSerializer";
 import { LpInfoUpdate } from "./lpInfo";
 import redisClient from "@/constant/config/redis";
 import solana_connect_instance from "@/lib/solana";
-import { commonInsert } from "@/utils/mysqlHelper";
+import { LpInfoRepository, TokenRepository } from "@/database/repositories";
 import { getTokenInfoUseCache } from "@/service/TokenInfoService";
+import { MemeEvent } from "@/type/meme";
+import { PoolEvent } from "@/type/pool";
 
 interface SwapTransaction {
     txHash: string;
@@ -36,67 +38,323 @@ interface SwapTransaction {
 
 export class SolanaBlockDataHandler {
     private static stopped = false;
+    private static started = false;
+    private static processing = false;
+    private static shutdownPromise: Promise<void> | null = null;
+    private static shutdownResolve: (() => void) | null = null;
     private static lpinfo_cache = `LP_INFO_CACHE_KEY`;
+    private static consumerName = `consumer_${process.pid}`;
+    private static batchSize = 10;
+    private static blockTimeout = 5000;
+    private static pendingIdleTimeout = 300000; // 5分钟
+    
     public static async start() {
+        // 防止重复启动
+        if (this.started) {
+            console.log(`⚠️  Consumer 已经在运行中，忽略重复启动请求`);
+            return;
+        }
+        
+        // 如果已经停止，不允许重新启动
+        if (this.stopped) {
+            console.log(`⚠️  Consumer 已停止，无法重新启动`);
+            return;
+        }
+        
+        this.started = true;
+        console.log(`🚀 Consumer '${this.consumerName}' started (PID: ${process.pid})`);
+        
+        // 检查停止标志
+        if (this.stopped) {
+            console.log(`🛑 Consumer 在启动过程中收到停止信号，取消启动`);
+            this.started = false;
+            return;
+        }
+        
+        // 确保消费者组已创建
+        await BlockDataSerializer.initConsumerGroup();
+        
+        // 再次检查停止标志（可能在 initConsumerGroup 期间收到停止信号）
+        if (this.stopped) {
+            console.log(`🛑 Consumer 在初始化后收到停止信号，取消启动`);
+            this.started = false;
+            return;
+        }
+        
         while (!this.stopped) {
             try {
-                const keys = await redisClient.hkeys(BlockDataSerializer.cache_key);
-                if (keys.length === 0) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    continue;
+                // 检查停止标志
+                if (this.stopped) {
+                    break;
                 }
-                const sortedBlockNumbers = keys.map((key: string) => Number(key)).sort((a: number, b: number) => a - b);
-                // const batchSize = 1;
-                // for (let i = 0; i < sortedBlockNumbers.length; i += batchSize) {
-                //     const batch = sortedBlockNumbers.slice(i, i + batchSize);
-                //     console.log("batchHandle:", batch);
-                //     await Promise.all(batch.map(async (blockNumber: number) => {
-                //         const lockKey = `handle_block_data_lock:${blockNumber}`;
-                //         try {
-                //             const getLock = await redisClient.setNX(lockKey, "1");
-                //             if (getLock > 0) {
-                //                 await SolanaBlockDataHandler.handleBlockData(blockNumber);
-                //             } else {
-                //                 console.log(`other process is handling,blockNumber:${blockNumber}`);
-                //             }
-                //         } catch (e) {
-                //             console.log(`SolanaBlockDataHandler.handleBlockData error,blockNumber:${blockNumber}`, e);
-                //         } finally {
-                //             redisClient.del(lockKey);
-                //         }
-                //     }));
-                // }
-                for (let i = 0; i < sortedBlockNumbers.length; i++) {
-                    const blockNumber = sortedBlockNumbers[i];
-                    const lockKey = `handle_block_data_lock:${blockNumber}`;
-                    try {
-                        const getLock = await redisClient.setNX(lockKey, "1");
-                        if (getLock > 0) {
-                            try {
-                                await SolanaBlockDataHandler.handleBlockData(blockNumber);
-                            } finally {
-                                await redisClient.hdel(BlockDataSerializer.cache_key, String(blockNumber));
-                                const hasDelete = await redisClient.client.hExists(BlockDataSerializer.cache_key, String(blockNumber));
-                                if (hasDelete === 0) {
-                                    await redisClient.del(lockKey);
-                                }
-                            }
-                        } else {
-                            // console.log(`other process is handling,blockNumber:${blockNumber}`);
-                        }
-                    } catch (e) {
-                        console.log(`SolanaBlockDataHandler.handleBlockData error,blockNumber:${blockNumber}`, e);
-                    }
+                
+                // 1. 首先处理 Pending 消息（之前未确认的消息）
+                this.processing = true;
+                await this.processPendingMessages();
+                this.processing = false;
+                
+                // 再次检查停止标志
+                if (this.stopped) {
+                    break;
                 }
-            } catch (e) {
-                console.log(`SolanaBlockDataHandler.start error`, e);
+                
+                // 2. 读取新消息
+                this.processing = true;
+                await this.processNewMessages();
+                this.processing = false;
+                
+            } catch (error) {
+                this.processing = false;
+                // 如果是停止信号，不记录错误
+                if (this.stopped && (error as any)?.message?.includes('disconnect') || 
+                    (error as any)?.code === 'ECONNRESET') {
+                    console.log(`ℹ️  Redis connection closed during shutdown`);
+                    break;
+                }
+                console.error(`❌ Consumer loop error:`, error);
+                await new Promise(resolve => setTimeout(resolve, 1000));
             }
+        }
+        
+        console.log(`🛑 Consumer '${this.consumerName}' stopped`);
+        this.started = false;
+        
+        // 如果有等待关闭的 Promise，resolve 它
+        if (this.shutdownResolve) {
+            this.shutdownResolve();
+            this.shutdownResolve = null;
         }
     }
 
-    public static stop() {
+    public static async stop(): Promise<void> {
+        if (this.stopped) {
+            return;
+        }
+        
+        console.log(`🛑 [SolanaBlockDataHandler] 实例 ${process.pid} 开始优雅关闭...`);
         this.stopped = true;
-        console.log(`[SolanaBlockDataHandler] 实例 ${process.pid} 设置停止标志`);
+        
+        // 如果还没有启动，直接返回
+        if (!this.started) {
+            console.log(`ℹ️  Consumer 尚未启动，无需关闭`);
+            return;
+        }
+        
+        // 如果正在处理，等待完成
+        if (this.processing) {
+            console.log(`⏳ 等待当前操作完成...`);
+            
+            // 创建一个 Promise 来等待处理完成
+            if (!this.shutdownPromise) {
+                this.shutdownPromise = new Promise<void>((resolve) => {
+                    this.shutdownResolve = resolve;
+                });
+            }
+            
+            // 设置超时，最多等待10秒
+            const timeout = setTimeout(() => {
+                console.log(`⚠️  等待超时，强制退出`);
+                if (this.shutdownResolve) {
+                    this.shutdownResolve();
+                }
+            }, 10000);
+            
+            await this.shutdownPromise;
+            clearTimeout(timeout);
+        }
+        
+        console.log(`✅ [SolanaBlockDataHandler] 实例 ${process.pid} 已停止`);
+    }
+
+    private static async processNewMessages(): Promise<void> {
+        try {
+            // 如果已停止，使用较短的阻塞时间以便快速退出
+            const blockTime = this.stopped ? 100 : this.blockTimeout;
+            
+            const messages: any = await redisClient.xReadGroup(
+                BlockDataSerializer.consumer_group,
+                this.consumerName,
+                [
+                    {
+                        key: BlockDataSerializer.stream_key,
+                        id: '>'
+                    }
+                ],
+                {
+                    COUNT: this.batchSize,
+                    BLOCK: blockTime
+                }
+            );
+            
+            // 检查停止标志
+            if (this.stopped) {
+                return;
+            }
+            
+            if (!messages || !Array.isArray(messages) || messages.length === 0) {
+                return;
+            }
+            
+            for (const stream of messages) {
+                // 再次检查停止标志
+                if (this.stopped) {
+                    break;
+                }
+                
+                if (stream.messages && Array.isArray(stream.messages)) {
+                    for (const message of stream.messages) {
+                        if (this.stopped) {
+                            break;
+                        }
+                        await this.processMessage(message.id, message.message);
+                    }
+                }
+            }
+            
+        } catch (error) {
+            // 如果是停止时的连接错误，忽略
+            if (this.stopped && ((error as any)?.message?.includes('disconnect') || 
+                (error as any)?.code === 'ECONNRESET')) {
+                return;
+            }
+            console.error(`❌ Error reading new messages:`, error);
+        }
+    }
+    
+    private static async processPendingMessages(): Promise<void> {
+        try {
+            // 检查停止标志
+            if (this.stopped) {
+                return;
+            }
+            
+            const pending: any = await redisClient.xPending(
+                BlockDataSerializer.stream_key,
+                BlockDataSerializer.consumer_group,
+                '-', '+',
+                10,
+                this.consumerName
+            );
+            
+            // 再次检查停止标志
+            if (this.stopped) {
+                return;
+            }
+            
+            if (!pending || !pending.messages || pending.messages.length === 0) {
+                return;
+            }
+            
+            console.log(`⚠️  Found ${pending.messages.length} pending messages`);
+            
+            for (const msg of pending.messages) {
+                // 检查停止标志
+                if (this.stopped) {
+                    break;
+                }
+                
+                const idleTime = msg.millisecondsSinceLastDelivery || 0;
+                
+                if (idleTime > this.pendingIdleTimeout) {
+                    console.log(`⏰ Message ${msg.id} idle for ${idleTime}ms, reclaiming...`);
+                    
+                    try {
+                        const claimed: any = await redisClient.xClaim(
+                            BlockDataSerializer.stream_key,
+                            BlockDataSerializer.consumer_group,
+                            this.consumerName,
+                            60000,
+                            [msg.id]
+                        );
+                        
+                        // 检查停止标志
+                        if (this.stopped) {
+                            break;
+                        }
+                        
+                        if (claimed && Array.isArray(claimed)) {
+                            for (const claimedMsg of claimed) {
+                                if (this.stopped) {
+                                    break;
+                                }
+                                if (claimedMsg && claimedMsg.id && claimedMsg.message) {
+                                    await this.processMessage(claimedMsg.id, claimedMsg.message);
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        // 如果是停止时的连接错误，忽略
+                        if (this.stopped && ((error as any)?.message?.includes('disconnect') || 
+                            (error as any)?.code === 'ECONNRESET')) {
+                            break;
+                        }
+                        console.error(`❌ Failed to claim message ${msg.id}:`, error);
+                    }
+                } else {
+                    // 检查停止标志
+                    if (this.stopped) {
+                        break;
+                    }
+                    
+                    const messages = await redisClient.xRange(
+                        BlockDataSerializer.stream_key,
+                        msg.id,
+                        msg.id
+                    );
+                    
+                    // 检查停止标志
+                    if (this.stopped) {
+                        break;
+                    }
+                    
+                    if (messages && messages.length > 0) {
+                        await this.processMessage(messages[0].id, messages[0].message);
+                    }
+                }
+            }
+            
+        } catch (error) {
+            console.error(`❌ Error processing pending messages:`, error);
+        }
+    }
+    
+    private static async processMessage(
+        messageId: string,
+        messageData: any
+    ): Promise<void> {
+        const blockNumber = Number(messageData.blockNumber);
+        
+        try {
+            console.log(`🔄 Processing block ${blockNumber} (message: ${messageId})`);
+            
+            const blockData = BlockDataSerializer.deserialize(messageData.blockData);
+            
+            const swapTransactionArray = await this.handleBlockDataWithBlockData(
+                blockData,
+                blockNumber
+            );
+            
+            if (swapTransactionArray.length > 0) {
+                await Promise.all([
+                    this.insertToTokenTable(swapTransactionArray),
+                    this.insertToWalletTable(swapTransactionArray)
+                ]);
+            }
+            
+            await redisClient.xAck(
+                BlockDataSerializer.stream_key,
+                BlockDataSerializer.consumer_group,
+                messageId
+            );
+            
+            // 删除已处理的消息，释放内存
+            await redisClient.xDel(BlockDataSerializer.stream_key, messageId);
+            
+            console.log(`✅ Block ${blockNumber} processed and ACKed (message: ${messageId})`);
+            
+        } catch (error) {
+            console.error(`❌ Error processing block ${blockNumber}:`, error);
+        }
     }
 
     public static async handleBlockData(
@@ -112,8 +370,10 @@ export class SolanaBlockDataHandler {
         const swapTransactionArray = await this.handleBlockDataWithBlockData(blockData, blockNumber);
         const insertStart = Date.now();
         if (swapTransactionArray.length > 0) {
-            this.insertToTokenTable(swapTransactionArray);
-            this.insertToWalletTable(swapTransactionArray);
+            await Promise.all([
+                this.insertToTokenTable(swapTransactionArray),
+                this.insertToWalletTable(swapTransactionArray)
+            ]);
         }
         // if (lpArray.length > 0) {
         //     this.batchUpsertLpInfo(lpArray, blockData.blockTime?.timestamp);
@@ -163,7 +423,39 @@ export class SolanaBlockDataHandler {
 
         console.log(
             `convertData cost:${Date.now() - convertStart} ms,blockNumber:${blockNumber},blockTime:${blockData.blockTime?.timestamp}`);
-        this.convertToLpInfoUpdateList(fileteTransactions, Number(blockData.blockTime?.timestamp), tokenPriceMap);
+        
+        // === 新增：处理所有交易中的 memeEvents 和 liquidities ===
+        const blockTimestamp = Number(blockData.blockTime?.timestamp);
+        
+        // 收集所有交易的 memeEvents 和 liquidities
+        const allMemeEvents: MemeEvent[] = [];
+        const allLiquidities: PoolEvent[] = [];
+        
+        for (const tx of parseResult) {
+            if (tx.memeEvents?.length > 0) {
+                allMemeEvents.push(...tx.memeEvents);
+            }
+            if (tx.liquidities?.length > 0) {
+                allLiquidities.push(...tx.liquidities);
+            }
+        }
+        
+        // 并行处理代币创建、池子创建和迁移事件
+        const eventProcessStart = Date.now();
+        try {
+            await Promise.all([
+                this.handleMemeTokenCreation(allMemeEvents, blockNumber, blockTimestamp),
+                this.handleMemeMigration(allMemeEvents, blockNumber, blockTimestamp),
+                this.handlePoolCreation(allLiquidities, blockNumber, blockTimestamp, tokenPriceMap)
+            ]);
+            console.log(`事件处理耗时: ${Date.now() - eventProcessStart} ms`);
+        } catch (error) {
+            console.error(`处理事件时出错:`, error);
+        }
+        
+        // 现有的 LP info 更新逻辑
+        this.convertToLpInfoUpdateList(fileteTransactions, blockTimestamp, tokenPriceMap);
+        
         return swapTransactionArray;
     }
 
@@ -198,6 +490,242 @@ export class SolanaBlockDataHandler {
                 JSON.stringify(value));
         });
         return Array.from(uniqueMap.values());
+    }
+
+    /**
+     * 处理 memeEvents 中的 CREATE 事件，提取代币创建信息
+     * 对应数据示例见：get_block_parse_result.json line 7596-7611
+     */
+    private static async handleMemeTokenCreation(
+        memeEvents: MemeEvent[], 
+        blockNumber: number,
+        blockTimestamp: number
+    ): Promise<void> {
+        const createEvents = memeEvents.filter(event => event.type === 'CREATE');
+        
+        if (createEvents.length === 0) {
+            return;
+        }
+
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const event of createEvents) {
+            try {
+                const tokenAddress = event.baseMint;
+                if (!tokenAddress) {
+                    continue;
+                }
+
+                const tokenData = {
+                    tokenAddress: tokenAddress,
+                    name: event.name || '',
+                    symbol: event.symbol || '',
+                    decimals: event.decimals || 6, // 默认6位小数
+                    totalSupply: String(event.totalSupply || 1000000000), // 默认10亿
+                    metaUri: event.uri || '',
+                    creatorAddress: event.creator || event.user || '',
+                    createTx: event.signature || '',
+                    tokenCreateTs: event.timestamp || blockTimestamp,
+                    firstSeenTimestamp: event.timestamp || blockTimestamp,
+                };
+
+                await TokenRepository.upsert(tokenData);
+                successCount++;
+
+                // 如果有 bondingCurve 地址，可以作为初始池子信息记录
+                if (event.bondingCurve && event.quoteMint) {
+                    try {
+                        const quoteSymbol = SOLANA_DEX_ADDRESS_TO_NAME[event.quoteMint] || '';
+                        await LpInfoRepository.upsert({
+                            poolAddress: event.bondingCurve,
+                            tokenAMint: tokenAddress,
+                            tokenBMint: event.quoteMint,
+                            tokenASymbol: event.symbol || '',
+                            tokenBSymbol: quoteSymbol,
+                            tokenAAmount: 0,
+                            tokenBAmount: 0,
+                            liquidityUsd: 0,
+                            feeRate: 0.01, // bonding curve 通常是 1%
+                            createdTimestamp: event.timestamp || blockTimestamp,
+                            lastUpdatedTimestamp: event.timestamp || blockTimestamp,
+                        });
+                    } catch (lpError) {
+                        console.error(`Failed to create LP info for bonding curve ${event.bondingCurve}:`, lpError);
+                    }
+                }
+
+            } catch (error) {
+                console.error(`Failed to upsert token ${event.baseMint}:`, error);
+                failCount++;
+            }
+        }
+
+        if (successCount > 0) {
+            console.log(`✅ 处理 ${successCount} 个代币创建事件 (失败: ${failCount})`);
+        }
+    }
+
+    /**
+     * 处理 memeEvents 中的 MIGRATE 事件
+     * 迁移通常发生在 bonding curve 完成后代币转移到 DEX（如 Raydium）
+     */
+    private static async handleMemeMigration(
+        memeEvents: MemeEvent[],
+        blockNumber: number,
+        blockTimestamp: number
+    ): Promise<void> {
+        const migrateEvents = memeEvents.filter(event => event.type === 'MIGRATE');
+        
+        if (migrateEvents.length === 0) {
+            return;
+        }
+
+        let updateCount = 0;
+        let createCount = 0;
+        let failCount = 0;
+
+        for (const event of migrateEvents) {
+            try {
+                // 更新旧池子（bondingCurve）
+                if (event.bondingCurve) {
+                    try {
+                        const existingPool = await LpInfoRepository.findByPoolAddress(event.bondingCurve);
+                        if (existingPool) {
+                            await LpInfoRepository.update(event.bondingCurve, {
+                                lastUpdatedTimestamp: event.timestamp || blockTimestamp,
+                            });
+                            updateCount++;
+                        }
+                    } catch (updateError) {
+                        console.error(`Failed to update bonding curve ${event.bondingCurve}:`, updateError);
+                    }
+                }
+
+                // 创建新池子
+                if (event.pool && event.baseMint && event.quoteMint) {
+                    try {
+                        const quoteSymbol = SOLANA_DEX_ADDRESS_TO_NAME[event.quoteMint] || '';
+                        const baseSymbol = event.symbol || '';
+                        
+                        await LpInfoRepository.upsert({
+                            poolAddress: event.pool,
+                            tokenAMint: event.baseMint,
+                            tokenBMint: event.quoteMint,
+                            tokenASymbol: baseSymbol,
+                            tokenBSymbol: quoteSymbol,
+                            tokenAAmount: event.poolAReserve || 0,
+                            tokenBAmount: event.poolBReserve || 0,
+                            liquidityUsd: 0, // 需要后续计算
+                            feeRate: event.poolFeeRate || 0.003, // 默认 0.3%
+                            createdTimestamp: event.timestamp || blockTimestamp,
+                            lastUpdatedTimestamp: event.timestamp || blockTimestamp,
+                        });
+                        createCount++;
+                    } catch (createError) {
+                        console.error(`Failed to create new pool ${event.pool}:`, createError);
+                        failCount++;
+                    }
+                }
+
+            } catch (error) {
+                console.error(`Failed to handle migration event:`, error);
+                failCount++;
+            }
+        }
+
+        if (updateCount > 0 || createCount > 0) {
+            console.log(`✅ 处理 ${migrateEvents.length} 个迁移事件 (更新: ${updateCount}, 创建: ${createCount}, 失败: ${failCount})`);
+        }
+    }
+
+    /**
+     * 处理 liquidities 数组中的 CREATE 事件
+     * 对应类型：PoolEvent with type='CREATE'
+     */
+    private static async handlePoolCreation(
+        liquidities: PoolEvent[],
+        blockNumber: number,
+        blockTimestamp: number,
+        tokenPriceMap: any
+    ): Promise<void> {
+        const createEvents = liquidities.filter(event => event.type === 'CREATE');
+        
+        if (createEvents.length === 0) {
+            return;
+        }
+
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const event of createEvents) {
+            try {
+                if (!event.poolId || !event.token0Mint || !event.token1Mint) {
+                    continue;
+                }
+
+                // 获取代币信息
+                let token0Symbol = '';
+                let token1Symbol = '';
+                
+                // 先尝试从 DEX 基础代币列表获取
+                token0Symbol = SOLANA_DEX_ADDRESS_TO_NAME[event.token0Mint] || '';
+                token1Symbol = SOLANA_DEX_ADDRESS_TO_NAME[event.token1Mint] || '';
+
+                // 如果没有找到，尝试从缓存获取
+                if (!token0Symbol) {
+                    const token0Info = await getTokenInfoUseCache(event.token0Mint);
+                    token0Symbol = token0Info?.symbol || '';
+                }
+                if (!token1Symbol) {
+                    const token1Info = await getTokenInfoUseCache(event.token1Mint);
+                    token1Symbol = token1Info?.symbol || '';
+                }
+
+                // 计算流动性 USD 价值
+                let liquidityUsd = 0;
+                const token0Amount = event.token0Amount || 0;
+                const token1Amount = event.token1Amount || 0;
+
+                // 尝试使用 token0 的价格
+                if (tokenPriceMap[event.token0Mint]) {
+                    liquidityUsd = token0Amount * tokenPriceMap[event.token0Mint] * 2;
+                } 
+                // 尝试使用 token1 的价格
+                else if (tokenPriceMap[event.token1Mint]) {
+                    liquidityUsd = token1Amount * tokenPriceMap[event.token1Mint] * 2;
+                }
+                // 如果 token1 是 SOL/WSOL，使用 SOL 价格
+                else if (token1Symbol === 'SOL' || token1Symbol === 'WSOL') {
+                    const solPrice = await TokenPriceService.getPrice("SOL", "USDT");
+                    liquidityUsd = token1Amount * solPrice * 2;
+                }
+
+                await LpInfoRepository.upsert({
+                    poolAddress: event.poolId,
+                    tokenAMint: event.token0Mint,
+                    tokenBMint: event.token1Mint,
+                    tokenASymbol: token0Symbol,
+                    tokenBSymbol: token1Symbol,
+                    tokenAAmount: Number(event.token0AmountRaw || event.token0Amount || 0),
+                    tokenBAmount: Number(event.token1AmountRaw || event.token1Amount || 0),
+                    liquidityUsd: Number(liquidityUsd),
+                    feeRate: 0.003, // 默认 0.3%，可以从事件中获取如果有的话
+                    createdTimestamp: event.timestamp || blockTimestamp,
+                    lastUpdatedTimestamp: event.timestamp || blockTimestamp,
+                });
+
+                successCount++;
+
+            } catch (error) {
+                console.error(`Failed to create pool ${event.poolId}:`, error);
+                failCount++;
+            }
+        }
+
+        if (successCount > 0) {
+            console.log(`✅ 处理 ${successCount} 个池子创建事件 (失败: ${failCount})`);
+        }
     }
 
     static async convertData(
@@ -295,7 +823,7 @@ export class SolanaBlockDataHandler {
         }));
 
         await clickhouseClient.insert({
-            table: "≈",
+            table: "solana_swap_transactions_wallet",
             values,
             format: "JSONEachRow",
         });
@@ -335,8 +863,7 @@ export class SolanaBlockDataHandler {
     static async batchUpsertLpInfo(
         lpDataList: LpInfoUpdate[], solUsdPrice: number
     ) {
-        const values: any[] = [];
-        const placeholders: string[] = [];
+        const lpDataToUpsert: any[] = [];
 
         for (const lp of lpDataList) {
             let quoteSymbol = SOLANA_DEX_ADDRESS_TO_NAME[lp.token_a_mint];
@@ -361,40 +888,30 @@ export class SolanaBlockDataHandler {
                 quoteAddress = lp.token_a_mint;
             }
 
-            placeholders.push("(?, ?, ?, ?, ?, ?, ?,?,?)");
             let liquidityUsdValue = MathUtil.multiply(quote_amount, 1);
             if (quoteSymbol === "SOL" || quoteSymbol === "WSOL") {
                 liquidityUsdValue = MathUtil.multiply(quote_amount, solUsdPrice);
             }
             liquidityUsdValue = MathUtil.multiply(liquidityUsdValue, 2);
             console.log(`pool${lp.pool_address}  liquidityUsdValue:${liquidityUsdValue}`)
-            values.push(
-                lp.pool_address,
-                tokenAddress,
-                token_amount.toString(),
-                quoteAddress,
-                quote_amount.toString(),
-                quoteSymbol,
-                liquidityUsdValue,
-                lp.fee_rate || 0,
-                lp.transactinTimeTs
-            );
+            
+            lpDataToUpsert.push({
+                poolAddress: lp.pool_address,
+                tokenAMint: tokenAddress,
+                tokenBMint: quoteAddress,
+                tokenASymbol: '',
+                tokenBSymbol: quoteSymbol,
+                tokenAAmount: Number(token_amount),
+                tokenBAmount: Number(quote_amount),
+                liquidityUsd: Number(liquidityUsdValue),
+                feeRate: lp.fee_rate || 0,
+                createdTimestamp: lp.transactinTimeTs,
+                lastUpdatedTimestamp: lp.transactinTimeTs,
+            });
         }
 
-        const sql = `
-            INSERT INTO lp_info (pool_address, token_address, token_amount, quote_address, quote_amount, quote_symbol,
-                                 liquidity_usd, fee_rate,last_transaction_time)
-            VALUES ${placeholders.join(",")} ON DUPLICATE KEY
-            UPDATE
-                token_amount =
-            VALUES (token_amount), quote_amount =
-            VALUES (quote_amount), liquidity_usd =
-            VALUES (liquidity_usd), fee_rate =
-            VALUES (fee_rate)
-        `;
-
         try {
-            await commonInsert(sql, values);
+            await LpInfoRepository.batchUpsert(lpDataToUpsert);
             for (const lp of lpDataList) {
                 redisClient.hdel(this.lpinfo_cache, lp.pool_address);
             }
@@ -558,6 +1075,18 @@ export class SolanaBlockDataHandler {
                 continue;
             }
 
+            // 确保 transactionTime 是字符串格式
+            // transaction_time 可能是数字（Unix时间戳）或字符串
+            let transactionTime: string;
+            if (typeof transaction.transaction_time === 'number') {
+                // 如果是数字，转换为ISO字符串格式
+                transactionTime = new Date(transaction.transaction_time * 1000).toISOString();
+            } else if (typeof transaction.transaction_time === 'string') {
+                transactionTime = transaction.transaction_time;
+            } else {
+                // 如果既不是数字也不是字符串，使用当前时间
+                transactionTime = new Date().toISOString();
+            }
 
             const filteredData: TokenSwapFilterData = {
                 userAddress: transaction.wallet_address,
@@ -572,7 +1101,7 @@ export class SolanaBlockDataHandler {
                 quotePrice: transaction.quote_price,
                 usdPrice: calculatedUsdPrice,
                 usdAmount: calculatedUsdAmount,
-                transactionTime: transaction.transaction_time,
+                transactionTime: transactionTime,
                 tokenAmount: transaction.token_amount,
                 quoteAmount: transaction.quote_amount,
             };

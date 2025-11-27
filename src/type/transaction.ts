@@ -118,6 +118,7 @@ export interface TokenNormSnapShot {
 export interface SnapShotForWalletTrading {
     walletAddress: string
     snapshotTime: string
+    blockHeight?: number  // 快照区块高度
     perTLTradingValue: {
         tokenAddress: string
         tradeAmount: number

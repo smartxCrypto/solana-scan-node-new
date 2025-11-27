@@ -1,6 +1,6 @@
 import redisClient from "../constant/config/redis";
 import { fetchTokenMetadataService } from "./FetchTokenMetadataService";
-import { commonQuery, commonInsert, commonQueryWithPagination } from "../utils/mysqlHelper";
+import { TokenRepository } from "@/database/repositories";
 import type { TokenInfo } from "@/type/token";
 import { SolScanAPi } from "@/utils/solscanUtl";
 
@@ -39,25 +39,19 @@ export async function getTokenInfoUseCache(
 export async function getTokenInfoFromDB(
   tokenAddress: string,
 ): Promise<TokenInfo | null> {
-  const sql = `
-    SELECT id, token_address, name, symbol, decimals, total_supply, meta_uri, logo_url,
-           website_url, twitter_url, telegram_url, is_risk_token, first_seen_timestamp,
-           created_at, updated_at, token_create_ts, latest_price, creator_address, create_tx, sol_scan_image
-    FROM tokens
-    WHERE token_address = ?
-  `;
   try {
-    const result = await commonQuery<TokenInfo>(sql, [tokenAddress]);
-    const dbData = result[0];
-    if (dbData) {
-      await redisClient.hset(
-        tokenInfoCache,
-        tokenAddress,
-        JSON.stringify(dbData),
-      );
-      return dbData;
+    const dbRecord = await TokenRepository.findByAddress(tokenAddress);
+    if (!dbRecord) {
+      return null;
     }
-    return null;
+
+    const tokenInfo = mapTokenRecordToInfo(dbRecord);
+    await redisClient.hset(
+      tokenInfoCache,
+      tokenAddress,
+      JSON.stringify(tokenInfo),
+    );
+    return tokenInfo;
   } catch (error) {
     console.error("Error in getTokenInfoFromDB:", error);
     throw error;
@@ -104,69 +98,27 @@ export async function createTokenInfo(
     tokenInfo.twitter_url = solscanTokenInfo.metadata?.twitter;
     tokenInfo.first_seen_timestamp = solscanTokenInfo.created_time;
     tokenInfo.token_create_ts = solscanTokenInfo.created_time;
+    tokenInfo.latest_price = solscanTokenInfo.price;
     tokenInfo.creator_address = solscanTokenInfo.creator;
     tokenInfo.create_tx = solscanTokenInfo.create_tx;
-    tokenInfo.latest_price = solscanTokenInfo.price;
   }
 
-  const insertSql = `
-            INSERT INTO tokens (token_address, name, symbol, decimals, total_supply, meta_uri, logo_url,
-                              website_url, twitter_url, telegram_url, is_risk_token, first_seen_timestamp,
-                              token_create_ts, latest_price, creator_address, create_tx, sol_scan_image)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY
-            UPDATE
-                name = VALUES(name), 
-                symbol = VALUES(symbol), 
-                decimals = VALUES(decimals), 
-                total_supply = VALUES(total_supply), 
-                meta_uri = VALUES(meta_uri), 
-                logo_url = VALUES(logo_url),
-                website_url = VALUES(website_url),
-                twitter_url = VALUES(twitter_url),
-                telegram_url = VALUES(telegram_url),
-                is_risk_token = VALUES(is_risk_token),
-                latest_price = VALUES(latest_price),
-                updated_at = CURRENT_TIMESTAMP
-        `;
-
   try {
-    const currentTimestamp = Date.now();
-    const result = await commonInsert(insertSql, [
-      tokenAddress,
-      tokenInfo.name,
-      tokenInfo.symbol || "",
-      tokenInfo.decimals,
-      tokenInfo.total_supply,
-      tokenInfo.meta_uri || "",
-      tokenInfo.logo_url || "",
-      tokenInfo.website_url || "",
-      tokenInfo.twitter_url || "",
-      tokenInfo.telegram_url || "",
-      false, // is_risk_token
-      currentTimestamp, // first_seen_timestamp
-      currentTimestamp, // token_create_ts
-      tokenInfo.latest_price || 0,
-      tokenInfo.creator_address || "",
-      tokenInfo.create_tx || "",
-      tokenInfo.sol_scan_image || ""
-    ]);
+    const dbData = mapTokenInfoToRecord(tokenInfo);
+    await TokenRepository.upsert(dbData);
 
-    if (result.affectedRows > 0) {
-      await redisClient.hset(
-        tokenInfoCache,
-        tokenAddress,
-        JSON.stringify(tokenInfo),
-      );
-      return tokenInfo;
-    }
+    await redisClient.hset(
+      tokenInfoCache,
+      tokenAddress,
+      JSON.stringify(tokenInfo),
+    );
+    return tokenInfo;
   } catch (error) {
     console.error("Error creating token info:", error);
   }
 
   return null;
 }
-// const tokenInfo =await getTokenInfoUseCache("JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN");
-// console.log(tokenInfo);
 
 /**
  * 分页查询 token 信息
@@ -187,50 +139,21 @@ export async function getTokenInfoByPage(
   totalPages: number;
 }> {
   try {
-    // 确保参数是整数类型
     const pageNumber = Math.max(1, Math.floor(Number(pageNum)));
     const pageSizeNumber = Math.max(1, Math.floor(Number(pageSize)));
-    const offset = (pageNumber - 1) * pageSizeNumber;
 
-    // 构建基础查询语句（不包含LIMIT和OFFSET）
-    let baseSql = `
-      SELECT id, token_address, name, symbol, decimals, total_supply, meta_uri, logo_url,
-             website_url, twitter_url, telegram_url, is_risk_token, first_seen_timestamp,
-             created_at, updated_at, token_create_ts, latest_price, creator_address, create_tx, sol_scan_image
-      FROM tokens
-    `;
-
-    let countSql = `SELECT COUNT(*) as total FROM tokens`;
-    const queryParams: any[] = [];
-
-    // 如果有搜索关键词，添加WHERE条件
-    if (searchKeyword && searchKeyword.trim()) {
-      const whereClause = ` WHERE (name LIKE ? OR symbol LIKE ? OR token_address LIKE ?)`;
-      baseSql += whereClause;
-      countSql += whereClause;
-
-      const searchPattern = `%${searchKeyword.trim()}%`;
-      queryParams.push(searchPattern, searchPattern, searchPattern);
-    }
-
-    // 添加排序（不包含LIMIT和OFFSET）
-    baseSql += ` ORDER BY created_at DESC, name ASC`;
-
-    // 执行查询 - 使用专门的分页查询函数
-    const [dataResult, countResult] = await Promise.all([
-      commonQueryWithPagination<TokenInfo>(baseSql, queryParams, pageSizeNumber, offset),
-      commonQuery<{ total: number }>(countSql, queryParams)
-    ]);
-
-    const total = countResult[0]?.total || 0;
-    const totalPages = Math.ceil(total / pageSizeNumber);
+    const { data, total } = await TokenRepository.findByPage({
+      page: pageNumber,
+      pageSize: pageSizeNumber,
+      searchKeyword
+    });
 
     return {
-      data: dataResult,
+      data: data.map(mapTokenRecordToInfo),
       total,
       pageNum: pageNumber,
       pageSize: pageSizeNumber,
-      totalPages
+      totalPages: Math.ceil(total / pageSizeNumber)
     };
   } catch (error) {
     console.error("Error in getTokenInfoByPage:", error);
@@ -253,71 +176,23 @@ export async function batchUpdateTokenInfo(
   const failedTokens: string[] = [];
   let successCount = 0;
 
-  // 使用 Promise.allSettled 来处理批量操作，避免一个失败影响其他
   const updatePromises = tokenInfos.map(async (tokenInfo) => {
-    const updateSql = `
-      INSERT INTO tokens (token_address, name, symbol, decimals, total_supply, meta_uri, logo_url,
-                         website_url, twitter_url, telegram_url, is_risk_token, first_seen_timestamp,
-                         token_create_ts, latest_price, creator_address, create_tx, sol_scan_image)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
-      ON DUPLICATE KEY UPDATE
-        name = VALUES(name), 
-        symbol = VALUES(symbol), 
-        decimals = VALUES(decimals), 
-        total_supply = VALUES(total_supply), 
-        meta_uri = VALUES(meta_uri), 
-        logo_url = VALUES(logo_url),
-        website_url = VALUES(website_url),
-        twitter_url = VALUES(twitter_url),
-        telegram_url = VALUES(telegram_url),
-        is_risk_token = VALUES(is_risk_token),
-        latest_price = VALUES(latest_price),
-        creator_address = VALUES(creator_address),
-        create_tx = VALUES(create_tx),
-        updated_at = CURRENT_TIMESTAMP,
-        sol_scan_image = VALUES(sol_scan_image)
-    `;
-
     try {
-      const currentTimestamp = Date.now();
-      const result = await commonInsert(updateSql, [
-        tokenInfo.token_address,
-        tokenInfo.name || '',
-        tokenInfo.symbol || '',
-        tokenInfo.decimals || 0,
-        tokenInfo.total_supply || 0,
-        tokenInfo.meta_uri || '',
-        tokenInfo.logo_url || '',
-        tokenInfo.website_url || '',
-        tokenInfo.twitter_url || '',
-        tokenInfo.telegram_url || '',
-        tokenInfo.is_risk_token || false,
-        tokenInfo.first_seen_timestamp || currentTimestamp,
-        tokenInfo.token_create_ts || currentTimestamp,
-        tokenInfo.latest_price || 0,
-        tokenInfo.creator_address || '',
-        tokenInfo.create_tx || '',
-        tokenInfo.sol_scan_image || ''
-      ]);
+      const dbData = mapTokenInfoToRecord(tokenInfo);
+      await TokenRepository.upsert(dbData);
 
-      if (result.affectedRows > 0) {
-        // 同时更新 Redis 缓存
-        await redisClient.hset(
-          tokenInfoCache,
-          tokenInfo.token_address.toLowerCase(),
-          JSON.stringify(tokenInfo)
-        );
-        return { success: true, tokenAddress: tokenInfo.token_address };
-      } else {
-        return { success: false, tokenAddress: tokenInfo.token_address };
-      }
+      await redisClient.hset(
+        tokenInfoCache,
+        tokenInfo.token_address.toLowerCase(),
+        JSON.stringify(tokenInfo)
+      );
+      return { success: true, tokenAddress: tokenInfo.token_address };
     } catch (error) {
       console.error(`Error updating token ${tokenInfo.token_address}:`, error);
       return { success: false, tokenAddress: tokenInfo.token_address };
     }
   });
 
-  // 等待所有更新操作完成
   const results = await Promise.allSettled(updatePromises);
 
   results.forEach((result, index) => {
@@ -336,7 +211,7 @@ export async function batchUpdateTokenInfo(
 }
 
 /**
- * 批量删除 token 信息（附加方法）
+ * 批量删除 token 信息
  * @param tokenAddresses 要删除的 token 地址数组
  * @returns 返回删除成功的数量
  */
@@ -351,15 +226,12 @@ export async function batchDeleteTokenInfo(
   let successCount = 0;
 
   const deletePromises = tokenAddresses.map(async (tokenAddress) => {
-    const deleteSql = `DELETE FROM tokens WHERE token_address = ?`;
-
     try {
-      const result = await commonQuery(deleteSql, [tokenAddress]);
+      const deleted = await TokenRepository.delete(tokenAddress);
 
-      // 同时删除 Redis 缓存
       await redisClient.hdel(tokenInfoCache, tokenAddress.toLowerCase());
 
-      return { success: true, tokenAddress };
+      return { success: deleted, tokenAddress };
     } catch (error) {
       console.error(`Error deleting token ${tokenAddress}:`, error);
       return { success: false, tokenAddress };
@@ -400,45 +272,71 @@ export async function getTokensWithEmptySolScanImage(
   totalPages: number;
 }> {
   try {
-    // 确保参数是整数类型
     const pageNumber = Math.max(1, Math.floor(Number(pageNum)));
     const pageSizeNumber = Math.max(1, Math.floor(Number(pageSize)));
-    const offset = (pageNumber - 1) * pageSizeNumber;
 
-    // 构建查询语句 - 查询 sol_scan_image 为空或 NULL 的记录
-    const baseSql = `
-      SELECT id, token_address, name, symbol, decimals, total_supply, meta_uri, logo_url,
-             website_url, twitter_url, telegram_url, is_risk_token, first_seen_timestamp,
-             created_at, updated_at, token_create_ts, latest_price, creator_address, create_tx, sol_scan_image
-      FROM tokens
-      WHERE (sol_scan_image IS NULL OR sol_scan_image = '' OR sol_scan_image = 'null')
-      ORDER BY created_at DESC, name ASC
-    `;
-
-    const countSql = `
-      SELECT COUNT(*) as total 
-      FROM tokens 
-      WHERE (sol_scan_image IS NULL OR sol_scan_image = '' OR sol_scan_image = 'null')
-    `;
-
-    // 执行查询
-    const [dataResult, countResult] = await Promise.all([
-      commonQueryWithPagination<TokenInfo>(baseSql, [], pageSizeNumber, offset),
-      commonQuery<{ total: number }>(countSql, [])
-    ]);
-
-    const total = countResult[0]?.total || 0;
-    const totalPages = Math.ceil(total / pageSizeNumber);
+    const { data, total } = await TokenRepository.findWithEmptySolScanImage({
+      page: pageNumber,
+      pageSize: pageSizeNumber
+    });
 
     return {
-      data: dataResult,
+      data: data.map(mapTokenRecordToInfo),
       total,
       pageNum: pageNumber,
       pageSize: pageSizeNumber,
-      totalPages
+      totalPages: Math.ceil(total / pageSizeNumber)
     };
   } catch (error) {
     console.error("Error in getTokensWithEmptySolScanImage:", error);
     throw error;
   }
+}
+
+// Helper functions to map between database records and TokenInfo
+function mapTokenRecordToInfo(record: any): TokenInfo {
+  return {
+    id: String(record.id),
+    token_address: record.tokenAddress,
+    name: record.name || "",
+    symbol: record.symbol || "",
+    decimals: record.decimals || 0,
+    total_supply: Number(record.totalSupply || 0),
+    meta_uri: record.metaUri || "",
+    logo_url: record.logoUrl || "",
+    website_url: record.websiteUrl || "",
+    twitter_url: record.twitterUrl || "",
+    telegram_url: record.telegramUrl || "",
+    is_risk_token: record.isRiskToken || false,
+    first_seen_timestamp: Number(record.firstSeenTimestamp || 0),
+    token_create_ts: Number(record.tokenCreateTs || 0),
+    latest_price: record.latestPrice || 0,
+    creator_address: record.creatorAddress || "",
+    create_tx: record.createTx || "",
+    sol_scan_image: record.solScanImage || "",
+    created_at: record.createdAt ? new Date(record.createdAt).toISOString() : undefined,
+    updated_at: record.updatedAt ? new Date(record.updatedAt).toISOString() : undefined,
+  };
+}
+
+function mapTokenInfoToRecord(tokenInfo: TokenInfo): any {
+  return {
+    tokenAddress: tokenInfo.token_address,
+    name: tokenInfo.name || "",
+    symbol: tokenInfo.symbol || "",
+    decimals: tokenInfo.decimals || 0,
+    totalSupply: BigInt(tokenInfo.total_supply || 0),
+    metaUri: tokenInfo.meta_uri || "",
+    logoUrl: tokenInfo.logo_url || "",
+    websiteUrl: tokenInfo.website_url || "",
+    twitterUrl: tokenInfo.twitter_url || "",
+    telegramUrl: tokenInfo.telegram_url || "",
+    isRiskToken: tokenInfo.is_risk_token || false,
+    firstSeenTimestamp: BigInt(tokenInfo.first_seen_timestamp || Date.now()),
+    tokenCreateTs: BigInt(tokenInfo.token_create_ts || Date.now()),
+    latestPrice: tokenInfo.latest_price || 0,
+    creatorAddress: tokenInfo.creator_address || "",
+    createTx: tokenInfo.create_tx || "",
+    solScanImage: tokenInfo.sol_scan_image || "",
+  };
 }

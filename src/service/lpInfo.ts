@@ -1,5 +1,6 @@
 import redisClient from "@/constant/config/redis";
-import { commonQuery, commonInsert, commonDelete, commonQueryWithPagination } from "@/utils/mysqlHelper";
+import { LpInfoRepository } from "@/database/repositories";
+import type { LpInfo as LpInfoRecord, NewLpInfo } from "@/database/schema/lp-info";
 
 /**
  * LP信息接口 - 对应数据库表结构
@@ -11,12 +12,12 @@ export interface LpInfo {
   token_b_mint: string;
   token_a_symbol: string;
   token_b_symbol: string;
-  token_a_amount: bigint;
-  token_b_amount: bigint;
-  liquidity_usd: bigint;
+  token_a_amount: number;
+  token_b_amount: number;
+  liquidity_usd: number;
   fee_rate: number;
-  created_timestamp: bigint;
-  last_updated_timestamp: bigint;
+  created_timestamp: number;
+  last_updated_timestamp: number;
   created_at?: string;
   updated_at?: string;
 }
@@ -45,18 +46,9 @@ const lpInfoCache = "lp_info_cache";
  * @returns 包含该token的所有LP信息
  */
 export async function getLpInfoByToken(tokenMint: string): Promise<LpInfo[]> {
-  const sql = `
-    SELECT id, pool_address, token_a_mint, token_b_mint, token_a_symbol, token_b_symbol,
-           token_a_amount, token_b_amount, liquidity_usd, fee_rate, 
-           created_timestamp, last_updated_timestamp, created_at, updated_at
-    FROM lp_info
-    WHERE token_a_mint = ? OR token_b_mint = ?
-    ORDER BY liquidity_usd DESC, last_updated_timestamp DESC
-  `;
-
   try {
-    const result = await commonQuery<LpInfo>(sql, [tokenMint, tokenMint]);
-    return result;
+    const result = await LpInfoRepository.findByToken(tokenMint);
+    return result.map(mapRecordToLegacy);
   } catch (error) {
     console.error(`Error in getLpInfoByToken for token ${tokenMint}:`, error);
     throw error;
@@ -73,18 +65,9 @@ export async function getLpInfoByTokenPair(
   tokenA: string,
   tokenB: string
 ): Promise<LpInfo[]> {
-  const sql = `
-    SELECT id, pool_address, token_a_mint, token_b_mint, token_a_symbol, token_b_symbol,
-           token_a_amount, token_b_amount, liquidity_usd, fee_rate,
-           created_timestamp, last_updated_timestamp, created_at, updated_at
-    FROM lp_info
-    WHERE (token_a_mint = ? AND token_b_mint = ?) OR (token_a_mint = ? AND token_b_mint = ?)
-    ORDER BY liquidity_usd DESC, last_updated_timestamp DESC
-  `;
-
   try {
-    const result = await commonQuery<LpInfo>(sql, [tokenA, tokenB, tokenB, tokenA]);
-    return result;
+    const result = await LpInfoRepository.findByTokenPair(tokenA, tokenB);
+    return result.map(mapRecordToLegacy);
   } catch (error) {
     console.error(`Error in getLpInfoByTokenPair for ${tokenA}-${tokenB}:`, error);
     throw error;
@@ -105,17 +88,8 @@ export async function getLpInfoByPoolAddress(poolAddress: string): Promise<LpInf
       return JSON.parse(cacheData) as LpInfo;
     }
 
-    // 从数据库查询
-    const sql = `
-      SELECT id, pool_address, token_a_mint, token_b_mint, token_a_symbol, token_b_symbol,
-             token_a_amount, token_b_amount, liquidity_usd, fee_rate,
-             created_timestamp, last_updated_timestamp, created_at, updated_at
-      FROM lp_info
-      WHERE pool_address = ?
-    `;
-
-    const result = await commonQuery<LpInfo>(sql, [poolAddress]);
-    const lpInfo = result[0] || null;
+    const record = await LpInfoRepository.findByPoolAddress(poolAddress);
+    const lpInfo = record ? mapRecordToLegacy(record) : null;
 
     if (lpInfo) {
       // 缓存到Redis（缓存30分钟）
@@ -135,50 +109,19 @@ export async function getLpInfoByPoolAddress(poolAddress: string): Promise<LpInf
  * @returns 更新或创建的LP信息
  */
 export async function upsertLpInfo(lpData: LpInfoUpdate): Promise<LpInfo | null> {
-  const currentTimestamp = BigInt(Date.now());
-
-  const sql = `
-    INSERT INTO lp_info (
-      pool_address, token_a_mint, token_b_mint, token_a_symbol, token_b_symbol,
-      token_a_amount, token_b_amount, liquidity_usd, fee_rate,
-      created_timestamp, last_updated_timestamp, created_at, updated_at
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
-    ON DUPLICATE KEY UPDATE
-      token_a_amount = VALUES(token_a_amount),
-      token_b_amount = VALUES(token_b_amount),
-      liquidity_usd = VALUES(liquidity_usd),
-      fee_rate = VALUES(fee_rate),
-      last_updated_timestamp = VALUES(last_updated_timestamp),
-      updated_at = NOW()
-  `;
+  const timestamp = lpData.transactinTimeTs || Date.now();
 
   try {
-    const result = await commonInsert(sql, [
-      lpData.pool_address,
-      lpData.token_a_mint,
-      lpData.token_b_mint,
-      lpData.token_a_symbol || '',
-      lpData.token_b_symbol || '',
-      lpData.token_a_amount.toString(),
-      lpData.token_b_amount.toString(),
-      lpData.liquidity_usd.toString(),
-      lpData.fee_rate || 0,
-      currentTimestamp.toString(),
-      currentTimestamp.toString()
-    ]);
+    const dbData = mapUpdateToDbData(lpData, timestamp);
+    await LpInfoRepository.upsert(dbData);
 
-    if (result.affectedRows > 0) {
-      // 查询更新后的数据
-      const updatedLpInfo = await getLpInfoByPoolAddress(lpData.pool_address);
+    // 查询更新后的数据
+    const updatedLpInfo = await getLpInfoByPoolAddress(lpData.pool_address);
 
-      // 清除相关缓存
-      await clearLpInfoCache(lpData.pool_address);
+    // 清除相关缓存
+    await clearLpInfoCache(lpData.pool_address);
 
-      return updatedLpInfo;
-    }
-
-    return null;
+    return updatedLpInfo;
   } catch (error) {
     console.error('Error in upsertLpInfo:', error);
     throw error;
@@ -192,49 +135,11 @@ export async function batchUpsertLpInfo(
     return { successCount: 0, failedPools: [] };
   }
 
-  const now = BigInt(Date.now());
-  const values: any[] = [];
-  const placeholders: string[] = [];
-
-  for (const lp of lpDataList) {
-    placeholders.push("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
-
-    values.push(
-        lp.pool_address,
-        lp.token_a_mint,
-        lp.token_b_mint,
-        lp.token_a_symbol || '',
-        lp.token_b_symbol || '',
-        lp.token_a_amount.toString(),
-        lp.token_b_amount.toString(),
-        lp.liquidity_usd.toString(),
-        lp.fee_rate || 0,
-        now.toString(),
-        now.toString()
-    );
-  }
-
-  const sql = `
-    INSERT INTO lp_info (
-      pool_address, token_a_mint, token_b_mint, token_a_symbol, token_b_symbol,
-      token_a_amount, token_b_amount, liquidity_usd, fee_rate,
-      created_timestamp, last_updated_timestamp, created_at, updated_at
-    )
-    VALUES ${placeholders.join(",")}
-    ON DUPLICATE KEY UPDATE
-      token_a_amount = VALUES(token_a_amount),
-      token_b_amount = VALUES(token_b_amount),
-      liquidity_usd = VALUES(liquidity_usd),
-      fee_rate = VALUES(fee_rate),
-      last_updated_timestamp = VALUES(last_updated_timestamp),
-      updated_at = NOW()
-  `;
-
   try {
-    const result = await commonInsert(sql, values);
-    const successCount = result.affectedRows;
+    const timestamp = Date.now();
+    const dbDataList = lpDataList.map((lp) => mapUpdateToDbData(lp, timestamp));
+    const successCount = await LpInfoRepository.batchUpsert(dbDataList);
 
-    // 清除 Redis 缓存（并发执行）
     await Promise.all(
         lpDataList.map((lp) => clearLpInfoCache(lp.pool_address))
     );
@@ -242,8 +147,6 @@ export async function batchUpsertLpInfo(
     return { successCount, failedPools: [] };
   } catch (error) {
     console.error("Error in batchUpsertLpInfo:", error);
-
-    // 提取失败的池地址
     const failedPools = lpDataList.map((lp) => lp.pool_address);
     return { successCount: 0, failedPools };
   }
@@ -318,60 +221,22 @@ export async function getLpInfoByPage(
   totalPages: number;
 }> {
   try {
-    // 确保参数是整数类型
     const pageNumber = Math.max(1, Math.floor(Number(pageNum)));
     const pageSizeNumber = Math.max(1, Math.floor(Number(pageSize)));
-    const offset = (pageNumber - 1) * pageSizeNumber;
-    const queryParams: any[] = [];
 
-    let baseSql = `
-      SELECT id, pool_address, token_a_mint, token_b_mint, token_a_symbol, token_b_symbol,
-             token_a_amount, token_b_amount, liquidity_usd, fee_rate,
-             created_timestamp, last_updated_timestamp, created_at, updated_at
-      FROM lp_info
-    `;
-
-    let countSql = `SELECT COUNT(*) as total FROM lp_info`;
-    let whereConditions: string[] = [];
-
-    // 添加token过滤条件
-    if (tokenFilter && tokenFilter.trim()) {
-      whereConditions.push(`(token_a_mint = ? OR token_b_mint = ? OR token_a_symbol LIKE ? OR token_b_symbol LIKE ?)`);
-      const likePattern = `%${tokenFilter.trim()}%`;
-      queryParams.push(tokenFilter, tokenFilter, likePattern, likePattern);
-    }
-
-    // 添加最小流动性过滤条件
-    if (minLiquidityUsd !== undefined && minLiquidityUsd > 0) {
-      whereConditions.push(`liquidity_usd >= ?`);
-      queryParams.push(Math.floor(Number(minLiquidityUsd)));
-    }
-
-    // 构建WHERE子句
-    if (whereConditions.length > 0) {
-      const whereClause = ` WHERE ${whereConditions.join(' AND ')}`;
-      baseSql += whereClause;
-      countSql += whereClause;
-    }
-
-    // 添加排序（不包含LIMIT和OFFSET）
-    baseSql += ` ORDER BY liquidity_usd DESC, last_updated_timestamp DESC`;
-
-    // 执行查询 - 使用专门的分页查询函数
-    const [dataResult, countResult] = await Promise.all([
-      commonQueryWithPagination<LpInfo>(baseSql, queryParams, pageSizeNumber, offset),
-      commonQuery<{ total: number }>(countSql, queryParams)
-    ]);
-
-    const total = countResult[0]?.total || 0;
-    const totalPages = Math.ceil(total / pageSizeNumber);
+    const { data, total } = await LpInfoRepository.findByPage({
+      page: pageNumber,
+      pageSize: pageSizeNumber,
+      tokenFilter,
+      minLiquidityUsd
+    });
 
     return {
-      data: dataResult,
+      data: data.map(mapRecordToLegacy),
       total,
       pageNum: pageNumber,
       pageSize: pageSizeNumber,
-      totalPages
+      totalPages: Math.ceil(total / pageSizeNumber)
     };
   } catch (error) {
     console.error('Error in getLpInfoByPage:', error);
@@ -385,15 +250,14 @@ export async function getLpInfoByPage(
  * @returns 是否删除成功
  */
 export async function deleteLpInfo(poolAddress: string): Promise<boolean> {
-  const sql = `DELETE FROM lp_info WHERE pool_address = ?`;
-
   try {
-    const affectedRows = await commonDelete(sql, [poolAddress]);
+    const deleted = await LpInfoRepository.delete(poolAddress);
 
-    // 清除缓存
-    await clearLpInfoCache(poolAddress);
+    if (deleted) {
+      await clearLpInfoCache(poolAddress);
+    }
 
-    return affectedRows > 0;
+    return deleted;
   } catch (error) {
     console.error(`Error deleting LP info for pool ${poolAddress}:`, error);
     return false;
@@ -419,21 +283,46 @@ async function clearLpInfoCache(poolAddress: string): Promise<void> {
  * @returns 流动性最高的LP池列表
  */
 export async function getTopLiquidityPools(limit: number = 50): Promise<LpInfo[]> {
-  const sql = `
-    SELECT id, pool_address, token_a_mint, token_b_mint, token_a_symbol, token_b_symbol,
-           token_a_amount, token_b_amount, liquidity_usd, fee_rate,
-           created_timestamp, last_updated_timestamp, created_at, updated_at
-    FROM lp_info
-    WHERE liquidity_usd > 0
-    ORDER BY liquidity_usd DESC
-    LIMIT ?
-  `;
-
   try {
-    const result = await commonQuery<LpInfo>(sql, [limit]);
-    return result;
+    const result = await LpInfoRepository.getTopLiquidityPools(limit);
+    return result.map(mapRecordToLegacy);
   } catch (error) {
     console.error('Error in getTopLiquidityPools:', error);
     throw error;
   }
+}
+
+function mapRecordToLegacy(record: LpInfoRecord): LpInfo {
+  return {
+    id: record.id,
+    pool_address: record.poolAddress,
+    token_a_mint: record.tokenAMint,
+    token_b_mint: record.tokenBMint,
+    token_a_symbol: record.tokenASymbol,
+    token_b_symbol: record.tokenBSymbol,
+    token_a_amount: record.tokenAAmount,
+    token_b_amount: record.tokenBAmount,
+    liquidity_usd: record.liquidityUsd,
+    fee_rate: record.feeRate,
+    created_timestamp: record.createdTimestamp,
+    last_updated_timestamp: record.lastUpdatedTimestamp,
+    created_at: record.createdAt ? record.createdAt.toISOString?.() ?? String(record.createdAt) : undefined,
+    updated_at: record.updatedAt ? record.updatedAt.toISOString?.() ?? String(record.updatedAt) : undefined,
+  };
+}
+
+function mapUpdateToDbData(lpData: LpInfoUpdate, timestamp: number) {
+  return {
+    poolAddress: lpData.pool_address,
+    tokenAMint: lpData.token_a_mint,
+    tokenBMint: lpData.token_b_mint,
+    tokenASymbol: lpData.token_a_symbol || '',
+    tokenBSymbol: lpData.token_b_symbol || '',
+    tokenAAmount: Number(lpData.token_a_amount),
+    tokenBAmount: Number(lpData.token_b_amount),
+    liquidityUsd: Number(lpData.liquidity_usd),
+    feeRate: lpData.fee_rate ?? 0,
+    createdTimestamp: timestamp,
+    lastUpdatedTimestamp: timestamp,
+  } as Omit<NewLpInfo, 'id' | 'createdAt' | 'updatedAt'>;
 }

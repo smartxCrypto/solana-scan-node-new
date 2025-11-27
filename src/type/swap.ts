@@ -7,7 +7,7 @@ export enum ESwapTradeType {
 export interface SwapTransactionToken {
     tx_hash: string;
     trade_type: ESwapTradeType;
-    transaction_time: string;
+    transaction_time: string | number; // 可以是字符串或 Unix 时间戳（秒）
     pool_address: string;
     block_height: number;
     wallet_address: string;
@@ -25,7 +25,7 @@ export interface SwapTransactionToken {
 export interface SwapTransactionWallet {
     tx_hash: string;
     trade_type: ESwapTradeType;
-    transaction_time: string;
+    transaction_time: string | number; // 可以是字符串或 Unix 时间戳（秒）
     pool_address: string;
     block_height: number;
     wallet_address: string;

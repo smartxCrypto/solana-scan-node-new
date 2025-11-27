@@ -510,6 +510,19 @@ export class SmartMoneyTransactionHandler {
                     continue;
                 }
 
+                // 确保 transactionTime 是字符串格式
+                // transaction_time 可能是数字（Unix时间戳）或字符串
+                let transactionTime: string;
+                if (typeof transaction.transaction_time === 'number') {
+                    // 如果是数字，转换为ISO字符串格式
+                    transactionTime = new Date(transaction.transaction_time * 1000).toISOString();
+                } else if (typeof transaction.transaction_time === 'string') {
+                    transactionTime = transaction.transaction_time;
+                } else {
+                    // 如果既不是数字也不是字符串，使用当前时间
+                    transactionTime = new Date().toISOString();
+                }
+
                 const filteredData: TokenSwapFilterData = {
                     userAddress: transaction.wallet_address,
                     poolAddress: "",
@@ -523,7 +536,7 @@ export class SmartMoneyTransactionHandler {
                     quotePrice: transaction.quote_price,
                     usdPrice: transaction.usd_price,
                     usdAmount: calculatedUsdAmount,
-                    transactionTime: transaction.transaction_time,
+                    transactionTime: transactionTime,
                     tokenAmount: transaction.token_amount,
                     quoteAmount: transaction.quote_amount,
                 };

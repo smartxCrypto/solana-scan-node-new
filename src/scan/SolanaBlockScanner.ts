@@ -45,6 +45,9 @@ export class SolanaBlockScanner {
             endpoint: process.env.HELIUS_LASER_STREAM_API || '',
         }
 
+        // 初始化 Redis Stream 消费者组
+        await BlockDataSerializer.initConsumerGroup();
+
         const latestHeight = await SolanaBlockUtil.getLatestSlot();
 
         if (latestHeight > 0) {
@@ -66,11 +69,16 @@ export class SolanaBlockScanner {
             // writeFileSync(fileName, JSON.stringify(blockData, null, 2));
 
             const handleStart = Date.now();
-            // await blockQueue.add({ blockData, slot: Number(res.block?.slot) });
-            // SolanaBlockDataHandler.handleBlockData(blockData, Number(res.block?.slot));
-            // redisClient.set(REDIS_KEY_LAST_BLOCK, String(Number(res.block?.slot) + 1));
-            BlockDataSerializer.storeBlockDataToRedis(blockData, Number(res.block?.slot));
-            console.log(`${i} ---> handle slot:${res.block?.slot} cost:${Date.now() - handleStart} ms`);
+            
+            // 使用 Redis Stream 存储区块数据
+            const messageId = await BlockDataSerializer.storeBlockDataToStream(blockData, Number(res.block?.slot));
+            
+            if (messageId) {
+                console.log(`${i} ---> handle slot:${res.block?.slot} cost:${Date.now() - handleStart} ms, messageId: ${messageId}`);
+            } else {
+                console.error(`${i} ---> failed to store slot:${res.block?.slot}`);
+            }
+            
             i++;
         }, async (error) => {
             console.error(error);

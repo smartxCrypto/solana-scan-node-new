@@ -136,7 +136,7 @@ function processTokenTransactions(tokenData: PreComputedTokenData): TokenNormSna
         // 设置时间和区块信息（首次）
         if (tokenSnapshot.blockTime === "0") {
             tokenSnapshot.blockTime = tx.transactionTime;
-            tokenSnapshot.blockHeight = tx.blockHeight;
+            tokenSnapshot.blockHeight = tx.blockHeight || 0;
             tokenSnapshot.startPrice = tx.quotePrice;
         }
 
@@ -175,40 +175,13 @@ function processTokenTransactions(tokenData: PreComputedTokenData): TokenNormSna
     if (sortedTransactions.length > 0) {
         const firstTx = sortedTransactions[0];
         const lastTx = sortedTransactions[sortedTransactions.length - 1];
-        tokenSnapshot.snapShotBlockTime = Number(lastTx.transactionTime) - Number(firstTx.transactionTime);
+        const firstTime = Number(firstTx.transactionTime);
+        const lastTime = Number(lastTx.transactionTime);
+        tokenSnapshot.snapShotBlockTime = isNaN(firstTime) || isNaN(lastTime) ? 0 : lastTime - firstTime;
     }
 
     return tokenSnapshot;
 }
-
-/**
- * 优化版本的Token快照处理函数
- * 使用预运算 + 分组 + 并行处理
- */
-export const snapshotTokenValueByTxDataOptimized = async (txs: TokenSwapFilterData[]): Promise<TokenNormSnapShot[]> => {
-    console.log(`Processing ${txs.length} transactions for token snapshots`);
-
-    // 1. 预运算：按Token-Pool聚合
-    const preComputedTokens = preComputeTokenTransactions(txs);
-
-    // 2. 分组批量处理
-    const batchSize = 1000;
-    const tokenGroups = groupTokensForBatchProcessing(preComputedTokens, batchSize);
-
-    // 3. 并行处理所有组
-    const groupPromises = tokenGroups.map((group, index) => 
-        Promise.resolve(processTokenGroup(group, index))
-    );
-
-    const groupResults = await Promise.all(groupPromises);
-
-    // 4. 合并结果
-    const allResults = groupResults.flat();
-
-    console.log(`Token processing completed: ${allResults.length} token snapshots generated`);
-
-    return allResults;
-};
 
 export const snapshotTokenValueByTxData = (txs: TokenSwapFilterData[]): TokenNormSnapShot[] => {
     const result: SnapshotTokenFilterData = {};
@@ -222,7 +195,7 @@ export const snapshotTokenValueByTxData = (txs: TokenSwapFilterData[]): TokenNor
         }
 
         if (tokenNormSnapShot.blockHeight === 0) {
-            tokenNormSnapShot.blockHeight = tx.blockHeight;
+            tokenNormSnapShot.blockHeight = tx.blockHeight || 0;
         }
 
         if (tx.isBuy) {
@@ -253,7 +226,9 @@ export const snapshotTokenValueByTxData = (txs: TokenSwapFilterData[]): TokenNor
 
         tokenNormSnapShot.endPrice = tx.quotePrice;
 
-        tokenNormSnapShot.snapShotBlockTime = Number(tx.transactionTime) - Number(tokenNormSnapShot.blockTime);
+        const txTime = Number(tx.transactionTime);
+        const blockTime = Number(tokenNormSnapShot.blockTime);
+        tokenNormSnapShot.snapShotBlockTime = isNaN(txTime) || isNaN(blockTime) ? 0 : txTime - blockTime;
 
         tokenNormSnapShot.poolAddress = tx.poolAddress;
         tokenNormSnapShot.tokenAddress = tx.tokenAddress;

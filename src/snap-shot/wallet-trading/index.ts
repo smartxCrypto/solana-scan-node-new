@@ -86,7 +86,24 @@ async function processWalletGroup(
 ): Promise<SnapShotForWalletTrading[]> {
     // 1. 批量查询历史数据
     const walletAddresses = walletGroup.map(w => w.walletAddress);
-    const earliestTimestamp = Math.min(...walletGroup.map(w => parseInt(w.earliestTime)));
+    
+    // 正确地将时间字符串转换为 Unix 时间戳（秒）
+    // earliestTime 可能是 ISO 字符串或数字字符串
+    const earliestTimestamp = Math.min(...walletGroup.map(w => {
+        const time = w.earliestTime;
+        // 如果是 ISO 格式的字符串（包含 '-' 或 'T'）
+        if (typeof time === 'string' && (time.includes('-') || time.includes('T'))) {
+            return Math.floor(new Date(time).getTime() / 1000);
+        }
+        // 如果是数字字符串，直接解析
+        const parsed = parseInt(time);
+        // 如果解析出的数字看起来像毫秒时间戳（大于 1e12）
+        if (parsed > 1e12) {
+            return Math.floor(parsed / 1000);
+        }
+        // 否则假定是秒级时间戳
+        return parsed;
+    }));
     
     const historicalDataMap = await batchGetLatestWalletTradingSnapshotBeforeTime(
         walletAddresses, 

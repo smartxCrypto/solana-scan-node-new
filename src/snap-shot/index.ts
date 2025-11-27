@@ -29,6 +29,15 @@ const getTokenAndWalletTradingDataByBlockRange = async (startBlockHeight: number
     const tokenSnapShotData = await filterSwapDataForTokenTrading(filterData);
     const walletSnapShotData = await filterSwapDataForWalletTrading(filterData);
 
+    // 为快照数据设置区块高度（使用endBlockHeight）
+    tokenSnapShotData.forEach(snapshot => {
+        snapshot.blockHeight = endBlockHeight;
+    });
+    
+    walletSnapShotData.forEach(snapshot => {
+        snapshot.blockHeight = endBlockHeight;
+    });
+
     return {
         tokenSnapShotData,
         walletSnapShotData
